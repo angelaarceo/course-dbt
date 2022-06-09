@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: src_greenery
+    database: dbt
+    schema: public
+    tables: 
+     - name: orders
+     - name: users
