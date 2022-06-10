@@ -1,15 +1,87 @@
-Welcome to your new dbt project!
+# WEEK1 PROJECT
 
-### Using the starter project
+## 1.How many users do we have?
+``` sql
+SELECT COUNT(distinct user_id)
+FROM dbt.dbt_angela_arceo.stg_greenery__users
+```
 
-Try running the following commands:
-- dbt run
-- dbt test
+**130**
 
+## 2.On average, how many orders do we receive per hour?
+```sql
+WITH order_data as (
+SELECT 
+date_trunc('hour',order_created_at_utc) as order_hour
+,count(order_id) as nb_orders
+FROM dbt.dbt_angela_arceo.stg_greenery__orders
+GROUP BY date_trunc('hour',order_created_at_utc)
+)
+SELECT 
+order_hour
+,avg(nb_orders) as avg_orders
+FROM order_data
+GROUP BY order_hour
+ORDER BY order_hour
 
-### Resources:
-- Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
-- Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
-- Join the [chat](https://community.getdbt.com/) on Slack for live discussions and support
-- Find [dbt events](https://events.getdbt.com) near you
-- Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
+```
+## 3.On average, how long does an order take from being placed to being delivered?
+
+```sql
+WITH order_data as (
+SELECT 
+date_trunc('minutes',delivered_at_utc) - date_trunc('minutes',order_created_at_utc) as time_to_deliver
+FROM dbt.dbt_angela_arceo.stg_greenery__orders
+)
+SELECT 
+avg(time_to_deliver) as avg_orders
+FROM order_data
+```
+**3 days**
+
+## 4.How many users have only made one purchase? Two purchases? Three+ purchases?
+```sql
+WITH order_data as (
+SELECT 
+user_id,
+COUNT(order_id) AS purchases
+FROM dbt.dbt_angela_arceo.stg_greenery__orders
+GROUP BY user_id
+)
+SELECT 
+CASE 
+WHEN purchases = 1 THEN '1'
+WHEN purchases = 2 THEN '2'
+WHEN purchases = 3 THEN '3'
+WHEN purchases > 3 THEN '3+'
+END as nb_purchases,
+COUNT(user_id) as nb_users
+
+FROM order_data
+GROUP BY nb_purchases
+```
+| Number Purchases  | Number Users |
+| ----------------- | -------------|
+|         1         |      25      |
+|         2         |      28      |
+|         3         |      34      |
+|         3+        |      37      |
+
+## 5.On average, how many unique sessions do we have per hour?
+
+```sql
+WITH sessions_data as (
+SELECT 
+date_trunc('hour',event_created_at_utc) as event_hour
+,count(distinct session_id) as nb_sessions
+FROM dbt.dbt_angela_arceo.stg_greenery__events
+GROUP BY event_hour
+)
+SELECT 
+event_hour
+,avg(nb_sessions) as avg_sesions
+FROM sessions_data
+GROUP BY event_hour
+ORDER BY event_hour
+```
+
