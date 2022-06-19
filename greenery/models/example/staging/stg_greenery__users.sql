@@ -8,6 +8,8 @@ user_id
 ,last_name
 ,email
 ,created_at as created_at_utc
+,address_id
+
 from {{ source('src_greenery','users') }}
 )
 SELECT *

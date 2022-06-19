@@ -1,3 +1,24 @@
+# WEEK2 PROJECT
+
+## 1.What is our user repeat rate?
+
+``` sql
+WITH order_data AS 
+( SELECT 
+  user_id ,
+  COUNT(DISTINCT order_id) as purchases 
+  FROM dbt.dbt_angela_arceo.stg_greenery__orders
+  GROUP BY user_id ) 
+SELECT 
+COUNT(DISTINCT CASE WHEN purchases >1 THEN user_id END) as repeated_users,
+COUNT(DISTINCT user_id) as total_users ,
+CAST(COUNT(DISTINCT CASE WHEN purchases >1 THEN user_id END) AS DECIMAL(7,2) )/COUNT(DISTINCT user_id) as repeat_pct 
+FROM order_data
+
+```
+Repeat rate: **.7983**
+
+
 # WEEK1 PROJECT
 
 ## 1.How many users do we have?

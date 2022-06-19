@@ -8,6 +8,9 @@ order_id
 ,status as order_status
 ,created_at as order_created_at_utc
 , delivered_at as delivered_at_utc
+,promo_id
+,order_total
+
 from {{ source('src_greenery','orders') }}
 )
 SELECT *

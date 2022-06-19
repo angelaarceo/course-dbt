@@ -8,3 +8,7 @@ sources:
      - name: orders
      - name: users
      - name: events
+     - name: addresses
+     - name: products
+     - name: order_items
+     - name: promos
