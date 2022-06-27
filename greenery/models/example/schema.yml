@@ -122,19 +122,6 @@ models:
       - name: inventory
         description: "Inventory information of the product"
 
-  - name: stg_greenery__promos 
-    description: "Information on promotions"
-    columns:
-      - name: promo_id
-        description: "Primary key for this table"
-        tests:
-          - unique
-          - not_null
-      - name: promo_discount
-        description: "Discount applied by the promotion"
-      - name: promo_status
-        description: "Status of the promotion"
-
   - name: stg_greenery__users
     description: "Information on users"
     columns:

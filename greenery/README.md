@@ -1,3 +1,29 @@
+# WEEK3 PROJECT
+
+## 1. What is our overall conversion rate?
+``` sql
+WITH orders_completed as (
+SELECT
+session_id,
+CASE WHEN has_checkout = TRUE THEN 1 ELSE 0 END has_checkout 
+FROM dbt.dbt_angela_arceo.fact_events
+)
+SELECT
+sum(has_checkout::int) * 1.0 / count(distinct(session_id)) as conversion_rate
+FROM orders_completed
+```
+**0.6245674740484429065**
+
+## 2. What is our conversion rate by product?
+``` sql
+select
+product_name,
+COUNT(DISTINCT(CASE WHEN event_type = 'checkout' THEN session_id END)) * 1.0 /
+COUNT(DISTINCT(session_id)) as conversion_rate_product
+from dbt_angela_arceo.ini_sessions_products
+group by product_name;
+```
+
 # WEEK2 PROJECT
 
 ## 1.What is our user repeat rate?
