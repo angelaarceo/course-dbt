@@ -1,3 +1,47 @@
+# WEEK4 PROJECT
+## Part1. DBT Snapshots
+
+``` sql
+{% snapshot orders_snapshot %}
+
+  {{
+    config(
+      target_schema='snapshots',
+      unique_key='order_id',
+
+      strategy='check',
+      check_cols=['status'],
+    )
+  }}
+
+  SELECT * FROM {{ source('src_greenery','orders') }}
+
+{% endsnapshot %}
+```
+
+``` sql
+SELECT *
+FROM snapshots.orders_snapshot
+WHERE order_id = '05202733-0e17-4726-97c2-0520c024ab85'
+```
+image.png
+
+## Part 2 Modeling challenge
+I created two data models: ini_funnel and fact_funnel: 
+The funnel per days looks like the following table 
+
+|event_created_at |	sessions_to_page_view	| page_view_to_add_cart |	add_cart_to_checkout |	drop_to_page_view |	drop_to_add_cart |	drop_to_checkout |
+|-----------------|-----------------------|-----------------------|----------------------|--------------------|------------------|-------------------|
+|11/02/21 0:00	  |         1	            |     0.72319202	      |      0.634482759     |       0	          |   0.27680798	   |   0.365517241     |
+|10/02/21 0:00	  |         1	            |           1           |        	1            |  	   0	          |        0	       |          0        |
+|09/02/21 0:00            	1             |          	1	          |         1            |       0	          |        0         |          0        |
+
+Recently, we presented a 27% of the drop in the step of add_cart and 36% to checkout. 
+
+## Part 3 Reflection questions 
+
+The most significant value that I see in using dbt is the way that you structure your data models. If you have a well-structured data model is easier to debug, document, and collaborate with your team. I would like to take a second course to orchestrate with Airflow because this tool is what I use in my organization and I think scheduling and orchestration are a must in a pipeline. I definitely see dbt as an excellent tool to complement my data stack.
+
 # WEEK3 PROJECT
 
 ## 1. What is our overall conversion rate?
